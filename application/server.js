@@ -638,10 +638,7 @@ class BlockchainService {
   }
 
   async generateBatchId() {
-    // Generate unique batch ID with timestamp
-    const timestamp = Date.now();
-    const random = Math.floor(Math.random() * 1000);
-    return `BATCH${timestamp}${random}`;
+    return `BATCH${crypto.randomUUID().replace(/-/g, '').slice(0, 16).toUpperCase()}`;
   }
 
   async generateQRCode(batchId) {

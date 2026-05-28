@@ -1,0 +1,7 @@
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': false
+  pkcs11js: false
+  prisma: false
+  protobufjs: false
+  sharp: false

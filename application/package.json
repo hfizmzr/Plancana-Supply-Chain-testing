@@ -11,9 +11,9 @@
     "db:seed": "node prisma/seed.js",
     "db:reset": "npx prisma migrate reset --force && npm run db:seed",
     "db:studio": "npx prisma studio",
-    "blockchain:start": "cd ../../fabric-samples/test-network && ./network.sh up createChannel -c mychannel -ca",
-    "blockchain:deploy": "cd ../../fabric-samples/test-network && ./network.sh deployCC -ccn agricultural-contract -ccp ../../Plancana-Supply-Chain/chaincode/agricultural-contract/ -ccl javascript -c mychannel",
-    "blockchain:stop": "cd ../../fabric-samples/test-network && ./network.sh down"
+    "blockchain:start": "cd ../fabric-samples/test-network && ./network.sh up createChannel -c mychannel -ca",
+    "blockchain:deploy": "cd ../fabric-samples/test-network && ./network.sh deployCC -ccn agricultural-contract -ccp ../Plancana-Supply-Chain/chaincode/agricultural-contract/ -ccl javascript -c mychannel",
+    "blockchain:stop": "cd ../fabric-samples/test-network && ./network.sh down"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

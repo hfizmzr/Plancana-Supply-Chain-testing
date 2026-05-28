@@ -347,7 +347,7 @@ const TestMap = ({
           esriConfig,
         ]: any[]) => {
           if (!isMounted) return;
-          const orgUrl = "https://plancana.maps.arcgis.com";
+          const orgUrl = "https://hafiz-sandbox.maps.arcgis.com";
           esriConfig.portalUrl = orgUrl;
 
           // Configure ArcGIS with token
@@ -552,7 +552,7 @@ const TestMap = ({
           // Create WebMap with error handling
           const map = new WebMapModule({
             portalItem: {
-              id: "a24b5bc059d2478e843f4c1968e47860", // Your ID from the screenshot
+              id: webMapId || "a24b5bc059d2478e843f4c1968e47860", // Your ID from the screenshot
               portal: {
                 url: orgUrl,
               },

@@ -1,0 +1,87 @@
+# WIF3005 Alternative Assessment - Full Stack Docker Compose
+# Repository: https://github.com/Mirzaazhan/Plancana-Supply-Chain
+# This configuration connects to an external Hyperledger Fabric network (fabric_test)
+# Prerequisite: cd fabric-samples/test-network && ./network.sh up createChannel -c mychannel -ca
+
+version: "3.8"
+
+services:
+  # 1. PostgreSQL Database with PostGIS
+  postgres_db:
+    image: postgis/postgis:14-3.2
+    container_name: assessment-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=plancana_db
+    ports:
+      - "5433:5432"
+    networks:
+      - assessment-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. Backend API (with Hyperledger Fabric blockchain support)
+  backend:
+    build: ./application
+    container_name: assessment-backend
+    env_file: ./application/.env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres_db:5432/plancana_db
+      - PORT=3000
+      - NODE_ENV=development
+      - JWT_SECRET=assessment-secret-key
+      - FRONTEND_URL=http://localhost:3001
+      - CONNECTION_PROFILE_PATH=./organizations/peerOrganizations/org1.example.com/connection-org1.json
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./application:/app
+      - /app/node_modules
+      - ./fabric-samples/test-network/organizations:/app/organizations
+    networks:
+      - assessment-network
+      - fabric_test
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma generate &&
+             npx prisma migrate deploy &&
+             node prisma/seed.js &&
+             sed -i 's|localhost:7051|peer0.org1.example.com:7051|g' ./organizations/peerOrganizations/org1.example.com/connection-org1.json &&
+             sed -i 's|localhost:7054|ca.org1.example.com:7054|g' ./organizations/peerOrganizations/org1.example.com/connection-org1.json &&
+             node setupIdentity.js &&
+             npx nodemon server.js"
+
+  # 3. Frontend (Next.js)
+  frontend:
+    build: ./frontend/plancana-nextjs
+    container_name: assessment-frontend
+    env_file: ./frontend/plancana-nextjs/.env
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./frontend/plancana-nextjs:/app
+      - /app/node_modules
+    networks:
+      - assessment-network
+    depends_on:
+      - backend
+    command: npm run dev
+
+networks:
+  assessment-network:
+    driver: bridge
+  fabric_test:
+    external: true
+
+volumes:
+  postgres-data:

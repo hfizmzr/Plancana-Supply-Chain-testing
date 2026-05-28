@@ -7,10 +7,11 @@ async function setupIdentity() {
         const walletPath = path.join(process.cwd(), 'wallet');
         const wallet = await Wallets.newFileSystemWallet(walletPath);
 
-        // Correct paths with actual filename
-        const certPath = path.join(__dirname, '..', '..', 'fabric-samples', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'users', 'User1@org1.example.com', 'msp', 'signcerts', 'cert.pem');
+        // Use ORGANIZATIONS_PATH env var if set, otherwise default to ./organizations relative to cwd
+        const orgBasePath = process.env.ORGANIZATIONS_PATH || path.join(process.cwd(), 'organizations');
+        const certPath = path.join(orgBasePath, 'peerOrganizations', 'org1.example.com', 'users', 'User1@org1.example.com', 'msp', 'signcerts', 'cert.pem');
         
-        const keyDir = path.join(__dirname, '..', '..', 'fabric-samples', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com', 'users', 'User1@org1.example.com', 'msp', 'keystore');
+        const keyDir = path.join(orgBasePath, 'peerOrganizations', 'org1.example.com', 'users', 'User1@org1.example.com', 'msp', 'keystore');
 
         console.log('✅ Certificate found at:', certPath);
         console.log('🔍 Looking for private key in:', keyDir);
