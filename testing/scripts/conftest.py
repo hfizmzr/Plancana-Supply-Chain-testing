@@ -467,6 +467,31 @@ def fill_location(driver, lat=FARM_LAT, lng=FARM_LNG):
 #  HIGH-LEVEL WORKFLOW HELPERS
 # ============================================================================
 
+def login_as_retailer(driver):
+    """Login with seeded retailer account. Skips login if already on dashboard."""
+    driver.get(f"{BASE_URL}/login")
+    time.sleep(1.5)
+
+    if "dashboard" in driver.current_url.lower():
+        print(f"  Already authenticated — on: {driver.current_url}")
+        return driver.current_url
+
+    print(f"  Filling login form: {ACCOUNTS['RETAILER']['email']}")
+    driver.find_element(By.NAME, "email").send_keys(ACCOUNTS["RETAILER"]["email"])
+    driver.find_element(By.NAME, "password").send_keys(ACCOUNTS["RETAILER"]["password"])
+
+    print("  Clicking 'Sign In' ...")
+    click_named_button(driver, "Sign In")
+
+    try:
+        WebDriverWait(driver, 15).until(EC.url_contains("dashboard"))
+    except TimeoutException:
+        pass
+    time.sleep(1)
+    print(f"  Current URL: {driver.current_url}")
+    return driver.current_url
+
+
 def login_as_farmer(driver):
     """Login with seeded farmer account. Returns dashboard URL.
     With session-scoped driver, skips login if already authenticated."""

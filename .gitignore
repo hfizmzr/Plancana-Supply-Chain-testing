@@ -138,6 +138,10 @@ env/
 
 # Test/assessment documents (not tracked in version control)
 alt ass.md
+# Generated test artifacts
+testing/scripts/batch_ids.json
+testing/scripts/report_f08_*.html
+testing/scripts/test_run.log
 SOFTEST AA.md
 SOFTEST-TEST-DESIGN.md
 SOFTEST-TEST-LOG.md
