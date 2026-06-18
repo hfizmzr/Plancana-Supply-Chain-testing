@@ -135,3 +135,8 @@ venv/
 ENV/
 env/
 .venv/
+
+
+.opencode
+graphify-out/
+AGENTS.md
