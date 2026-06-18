@@ -135,3 +135,10 @@ venv/
 ENV/
 env/
 .venv/
+
+# Test/assessment documents (not tracked in version control)
+alt ass.md
+SOFTEST AA.md
+SOFTEST-TEST-DESIGN.md
+SOFTEST-TEST-LOG.md
+Testlog template.md
