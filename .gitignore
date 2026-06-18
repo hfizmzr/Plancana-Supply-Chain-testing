@@ -142,3 +142,7 @@ SOFTEST AA.md
 SOFTEST-TEST-DESIGN.md
 SOFTEST-TEST-LOG.md
 Testlog template.md
+
+.opencode
+graphify-out/
+AGENTS.md
